@@ -10,6 +10,7 @@ colorclass==2.2.2
 contourpy==1.1.1
 cycler==0.11.0
 dash==2.13.0
+dash-ag-grid==2.3.0
 dash-bootstrap-components==1.1.0
 dash-core-components==2.0.0
 dash-extensions==1.0.3
@@ -18,6 +19,7 @@ dash-table==5.0.0
 dataclass-wizard==0.22.2
 docopt==0.6.2
 EditorConfig==0.12.3
+feffery-antd-components==0.2.9
 Flask==2.2.5
 Flask-Caching==2.0.2
 Flask-Compress==1.14
