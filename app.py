@@ -23,16 +23,16 @@ app.layout = dbc.Container([
         dbc.Col([tree], width=3),
         dbc.Col([graph], width=9)
     ]),
-    dbc.Row([html.Div(id='my-output')])
-])
+    #dbc.Row([html.Div(id='my-output')],)
+],fluid=True)
 
-@callback(
+"""@callback(
     Output(component_id='my-output', component_property='children'),
     Input(component_id='tree', component_property='checkedKeys')
 )
 def update_output_div(input_value):
     app.logger.info(input_value)
-    return f'Output: {input_value}'
+    return f'Output: {input_value}' """
 
 
 @callback(

@@ -2,6 +2,7 @@ import pandas as pd
 import plotly.graph_objects as go # or plotly.express as px
 from plotly.subplots import make_subplots
 from dash.exceptions import PreventUpdate
+import textwrap
 
 
 
@@ -96,13 +97,14 @@ def get_graph(selectedkeys):
     # Create figure
     fig = go.Figure()
     #vertically stack n=len(gt) plots inside fig
-    fig = make_subplots(rows=n, cols=1, vertical_spacing=0.065, shared_xaxes=True)
+    fig = make_subplots(rows=n, cols=1, vertical_spacing=0.01, shared_xaxes=True)
     for i,key in enumerate(gt):
             for item in gt[key]:
                 print (f" Adding {item} to subplot {i+1} with item[:-2]]/item[-2:]]")
                 df_=df[df['UNIT_ID']==item[:-2]]
                 print(item,item[:-2], )
                 name=f"{item[:-2]}-{COL2PARAM[item[-2:]]}"
+                name='<br>'.join(textwrap.wrap(name, width=20))
                 if item[-2:]=='Rr':
                     # add bar chart
                                       
@@ -113,10 +115,7 @@ def get_graph(selectedkeys):
                         go.Scatter(name=name, x=list(df_['REC_TIME']), y=list(df_[item[-2:]])), i+1, 1)
                     #print(f"fig.add_trace(go.Scatter(x=list(df_['REC_TIME']), y=list(df_[item[-2:]])), {i+1}, 1)")
 
-    # Set title
-    fig.update_layout(
-        title_text="Time series with range slider and selectors"
-    )
+
 
     # Add range slider
     fig.update_layout(
@@ -151,9 +150,14 @@ def get_graph(selectedkeys):
     rangeslidersetter={x: False for x in axes} # no rangeslider
     rangeslidersetter[axes[-1]]=True # but only in the last subplot
     #print(rangeslidersetter)
-    ytitles={f'yaxis{i+1}_title':GRAPHGROUPS[key] for i,key in enumerate(gt)}
+    ytitles={f'yaxis{i+1}_title':'<br>'.join(textwrap.wrap(GRAPHGROUPS[key], width=12)) for i,key in enumerate(gt)}
     fig.update_layout(**rangeslidersetter, **ytitles,
                     xaxis_type="date")
+    fig.update_xaxes(rangeslider_thickness = 0.05)
+    fig.update_yaxes(automargin=True)
+    fig.update_layout(
+        margin=dict(l=20, r=20, t=20, b=20),
+    )
     return fig
 
 
