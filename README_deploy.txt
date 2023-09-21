@@ -1,10 +1,7 @@
-Deploying to a sub folder
-1. Set the envioronmetal variable DASH_BASE_PATHNAME
-dokku config:set rwh1 DASH_BASE_PATHNAME=/rwh1/
-2. Set the directives in the nginx config: 
-        location ~ ^/rwh1(.*) {
-        proxy_set_header Host "rwh1.ws.environment.gov.mv";
-        rewrite ^/rwh1(.*) /rwh1$1 break;
-        proxy_pass http://localhost:80;
-    }
+Deploy with dokku
+
+Need storage
+link all_stations_data.pkl file (from the location it is updated using get_data_python) to /var/lib/dokku/data/storage/<appname>
+then 
+dokku storage:mount mvmon /var/lib/dokku/data/storage/mvmon:/app/data
 
