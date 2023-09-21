@@ -4,11 +4,6 @@ from plotly.subplots import make_subplots
 from dash.exceptions import PreventUpdate
 
 
-# Load data
-df = pd.read_csv(
-    "https://raw.githubusercontent.com/plotly/datasets/master/finance-charts-apple.csv")
-df.columns = [col.replace("AAPL.", "") for col in df.columns]
-
 
 COUNTRY="The Maldives"
 PROVINCE="Meemu Atoll"
@@ -16,10 +11,11 @@ ISLANDS=["Mulah", "Muli", "Kolhufushi"]
 STATIONTYPE=["Rain Gauge", "Groundwater", "Groundwater+"]
 DEFAULTGRAPHS=['A07Rr']
 
-GRAPHGROUPS=['H', 'T', 'C', 'R']
+GRAPHGROUPS={'P': "Atmospheric pressure (mH20)", 'H': "Water level (m)", 'T': "Temperature (C°)", 'C':'Hydraulic Conductivity (mS/cm)',
+             'R':"Rainfall (mm)"}
 COL2PARAM={
     'H1': "Groundwater Level (m)",	
-    'H0': "Atmospheric Pressure (mH2O)"	,
+    'P0': "Atmospheric Pressure (mH2O)"	,
     'T0': "Atmospheric Temperature (C°)",	
     'T1': "Temperature in ground (C°)",	
     'C1': "Hydraulic Conductivity (mS/cm)",
@@ -45,9 +41,9 @@ for station in STATIONTYPES.items():
     if station[1] == STATIONTYPE[0]: # rainfall
         subst=['R', 'Rr']
     elif (station[1] == STATIONTYPE[1]): # groundwater
-        subst=['H1', 'H0', 'T0', 'T1', 'C1']
+        subst=['H1', 'P0', 'T0', 'T1', 'C1']
     else:
-        subst=['H1', 'H0', 'T0', 'T1', 'C1', 'H2', 'T2']
+        subst=['H1', 'P0', 'T0', 'T1', 'C1', 'H2', 'T2']
     
     tc2p={key: COL2PARAM[key] for key in subst}
     for col in tc2p.items():
@@ -79,7 +75,7 @@ treeData =[
 }]
 
 def get_graph_types(selectedkeys):
-    graph_types={x:[] for x in GRAPHGROUPS}
+    graph_types={x:[] for x in GRAPHGROUPS.keys()}
     for key in selectedkeys:
         graph_types[key[-2]].append(key)
     graph_types={key: value for key, value in graph_types.items() if len(value)}
@@ -92,7 +88,8 @@ def get_graph(selectedkeys):
     selectedkeys=[x for x in selectedkeys if len(x)==5 and x[0]=='A']
     
     df=pd.read_pickle('./data/all_stations_data.pkl').reset_index()
-
+    #Now rename column H0 to P0
+    df.rename(columns={'H0': 'P0'}, inplace=True)
     gt=get_graph_types(selectedkeys)
     print(gt)
     n=len(gt)
@@ -150,12 +147,12 @@ def get_graph(selectedkeys):
         
         )
     axes=[f"xaxis{i+1}_rangeslider_visible" for i in range(n)]
-
     #make a dict with all xaxis rangeslider_visible set to False except the last one
-    rangeslidersetter={x: False for x in axes}
-    rangeslidersetter[axes[-1]]=True
+    rangeslidersetter={x: False for x in axes} # no rangeslider
+    rangeslidersetter[axes[-1]]=True # but only in the last subplot
     #print(rangeslidersetter)
-    fig.update_layout(**rangeslidersetter, 
+    ytitles={f'yaxis{i+1}_title':GRAPHGROUPS[key] for i,key in enumerate(gt)}
+    fig.update_layout(**rangeslidersetter, **ytitles,
                     xaxis_type="date")
     return fig
 
