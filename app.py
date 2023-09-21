@@ -1,5 +1,5 @@
 import pandas as pd
-
+import flask
 
 from dash import Dash, dcc, html, Input, Output, callback, State
 #import dash_ag_grid as dag
@@ -9,12 +9,13 @@ from dash import html
 import support as sp    
 import dash_bootstrap_components as dbc
 
+server = flask.Flask(__name__)
 
 tree=fac.AntdTree(id="tree", treeData=sp.treeData, checkable=True, defaultExpandAll=True)
 graph=dcc.Graph(id="graph", style={'height': '100vh'})
 
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], server=server)
 
 # Build layout
 app.layout = dbc.Container([
