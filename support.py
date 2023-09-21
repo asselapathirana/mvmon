@@ -104,13 +104,16 @@ def get_graph(selectedkeys):
             for item in gt[key]:
                 print (f" Adding {item} to subplot {i+1} with item[:-2]]/item[-2:]]")
                 df_=df[df['UNIT_ID']==item[:-2]]
+                print(item,item[:-2], )
+                name=f"{item[:-2]}-{COL2PARAM[item[-2:]]}"
                 if item[-2:]=='Rr':
                     # add bar chart
+                                      
                     fig.add_trace(
-                        go.Scatter(name=item, x=list(df_['REC_TIME']), y=list(df_[item[-2:]])), i+1, 1)
+                        go.Scatter(name=name, x=list(df_['REC_TIME']), y=list(df_[item[-2:]])), i+1, 1)
                 else:
                     fig.add_trace(
-                        go.Scatter(name=item, x=list(df_['REC_TIME']), y=list(df_[item[-2:]])), i+1, 1)
+                        go.Scatter(name=name, x=list(df_['REC_TIME']), y=list(df_[item[-2:]])), i+1, 1)
                     #print(f"fig.add_trace(go.Scatter(x=list(df_['REC_TIME']), y=list(df_[item[-2:]])), {i+1}, 1)")
 
     # Set title
