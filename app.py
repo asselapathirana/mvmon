@@ -42,4 +42,5 @@ def update_output_div(input_value):
 def update_output_div(input_value):
     return sp.get_graph(input_value)
 
-app.run_server(debug=True, use_reloader=True)  # Turn off reloader if inside Jupyter
+if __name__ == '__main__':
+    app.run_server(debug=True, use_reloader=True)  # Turn off reloader if inside Jupyter
