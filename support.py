@@ -1,5 +1,6 @@
 import pandas as pd
-import plotly.graph_objects as go # or plotly.express as px
+import plotly.graph_objects as go  
+import plotly.express as px
 from plotly.subplots import make_subplots
 from dash.exceptions import PreventUpdate
 import textwrap
@@ -35,6 +36,8 @@ STATIONTYPES={
     'A07': STATIONTYPE[0],
     'A08': STATIONTYPE[0],
 }
+COLORS=['blue', 'black', 'brown', 'purple', 'red', 'orange', 'green',  'grey', 'cyan', 'yellow', 'pink', 'magenta', 'lime', 'maroon', 'navy', 'olive', 'silver', 'teal']
+DASHES=['solid',  'dash', 'dot', 'longdash', 'dashdot', 'longdashdot']
 stationarray=[]
 for station in STATIONTYPES.items():
     var=[]
@@ -102,17 +105,25 @@ def get_graph(selectedkeys):
             for item in gt[key]:
                 print (f" Adding {item} to subplot {i+1} with item[:-2]]/item[-2:]]")
                 df_=df[df['UNIT_ID']==item[:-2]]
-                print(item,item[:-2], )
+                color=COLORS[int(item[1:-2])]
+                
+                print(item,item[:-2], color )
                 name=f"{item[:-2]}-{COL2PARAM[item[-2:]]}"
                 name='<br>'.join(textwrap.wrap(name, width=20))
-                if item[-2:]=='Rr':
-                    # add bar chart
-                                      
-                    fig.add_trace(
-                        go.Scatter(name=name, x=list(df_['REC_TIME']), y=list(df_[item[-2:]])), i+1, 1)
+                if item[-2:]=='Rr' or item[-1]=='R':
+                    dash=DASHES[0]
                 else:
+                    t=int(item[-1])
+                    t=0 if t==1 else t
+                    dash=DASHES[t]
+                if item[-2:]=='Rr':
+                    # add bar chart                
                     fig.add_trace(
-                        go.Scatter(name=name, x=list(df_['REC_TIME']), y=list(df_[item[-2:]])), i+1, 1)
+                        go.Scatter(name=name, x=list(df_['REC_TIME']), y=list(df_[item[-2:]]), line={'color':color, 'dash':dash}), i+1, 1)
+                else:
+                    
+                    fig.add_trace(
+                        go.Scatter(name=name, x=list(df_['REC_TIME']), y=list(df_[item[-2:]]), line={'color':color, 'dash':dash}), i+1, 1)
                     #print(f"fig.add_trace(go.Scatter(x=list(df_['REC_TIME']), y=list(df_[item[-2:]])), {i+1}, 1)")
 
 
@@ -158,6 +169,8 @@ def get_graph(selectedkeys):
     fig.update_layout(
         margin=dict(l=20, r=20, t=20, b=20),
     )
+    # this single line is responsible to keep the range slider in place
+    fig.update_layout(uirevision='constant')
     return fig
 
 
