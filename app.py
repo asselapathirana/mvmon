@@ -6,45 +6,79 @@ from dash import Dash, dcc, html, Input, Output, callback, State
 import feffery_antd_components as fac
 # import html components from dash
 from dash import html
+from dash.exceptions import PreventUpdate
 import support as sp    
 import dash_bootstrap_components as dbc
+
+HFACT=0.74
+VFACT=1.0
 
 server = flask.Flask(__name__)
 
 tree=fac.AntdTree(id="tree", treeData=sp.treeData, checkable=True, defaultExpandAll=True,
                   persistence_type='local', persistence=True)
-graph=dcc.Graph(id="graph", style={'height': '100vh'})
-store=dcc.Store(id='store', storage_type='local')
+graph=html.Div(id="graphwindow", children=dcc.Graph(id="graph", style={'height': '150vh', 'width': '73vw'}))
+
+
+zoombox=dbc.Container([
+    html.Div([
+        html.Label("Vertical Zoom"),
+        dcc.Slider(
+            id='vertical-zoom-slider',
+            min=50,
+            max=200,
+            step=1,
+            value=100,
+            marks={50: '50%', 100: '100%', 200: '200%'},
+            
+        ),
+    ], style={'width': '50%', 'display': 'inline-block'}),
+    
+    html.Div([
+        html.Label("Horizontal Zoom"),
+        dcc.Slider(
+            id='horizontal-zoom-slider',
+            min=50,
+            max=200,
+            step=1,
+            value=100,
+            marks={50: '50%', 100: '100%', 200: '200%'}
+        ),
+    ], style={'width': '50%', 'display': 'inline-block'}),
+
+]  
+)
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], server=server)
 
 # Build layout
 app.layout = dbc.Container([
     dbc.Row([
-        dbc.Col([tree], width=3),
+        dbc.Col([tree, zoombox], width=3),
         dbc.Col([graph], width=9),
     ]),
-    dbc.Row([
-        store,
-    ]),
+
 ],fluid=True)
 
-
+"""
 @callback(
     Output(component_id='graph', component_property='figure'),
     Input(component_id='tree', component_property='checkedKeys')
 )
 def update_output_div(input_value):
     return sp.get_graph(input_value)
+"""
 
-@callback(
-    Output(component_id='store', component_property='data'),
-    Input(component_id='tree', component_property='checkedKeys'),
+@app.callback(
+    Output('graphwindow', 'children'),
+    [Input('vertical-zoom-slider', 'value'),
+    Input('horizontal-zoom-slider', 'value'),
+    Input('tree', 'checkedKeys')]
 )
-def update_store(checkedKeys):
-    #get the current range in the range slider
-    print(f"checkedkeys: {checkedKeys}")
-    return {'checkedKeys':checkedKeys}
+def update_graph(vertical_zoom, horizontal_zoom,  input_value):
+    horizontal_zoom=HFACT*int(horizontal_zoom)
+    vertical_zoom=VFACT*int(vertical_zoom)
+    return dcc.Graph(figure=sp.get_graph(input_value), style={'height': f'{vertical_zoom}vh', 'width': f'{horizontal_zoom}vw'})
 
 if __name__ == '__main__':
     app.run_server(debug=True, use_reloader=True)  # Turn off reloader if inside Jupyter
