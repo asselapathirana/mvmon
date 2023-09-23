@@ -10,8 +10,8 @@ from dash.exceptions import PreventUpdate
 import support as sp    
 import dash_bootstrap_components as dbc
 
-HFACT=0.74
-VFACT=1.0
+HFACT=0.72
+VFACT=0.99
 
 server = flask.Flask(__name__)
 
@@ -53,8 +53,8 @@ app = Dash(__name__, title = "3SWater Monitoring Stations", external_stylesheets
 # Build layout
 app.layout = dbc.Container([
     dbc.Row([
-        dbc.Col([tree, zoombox], lg=3),
-        dbc.Col([graph], lg=9),
+        dbc.Col([dbc.Card(tree), dbc.Card(zoombox)], lg=3),
+        dbc.Col([dbc.Card(graph)], lg=9),
     ]),
 
 ],fluid=True)
