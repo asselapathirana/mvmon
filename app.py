@@ -21,30 +21,29 @@ graph=html.Div(id="graphwindow", children=dcc.Graph(id="graph", style={'height':
 
 
 zoombox=dbc.Container([
-    html.Div([
+    dbc.Row([
         html.Label("Vertical Zoom"),
         dcc.Slider(
             id='vertical-zoom-slider',
             min=50,
             max=200,
-            step=1,
+            step=10,
             value=100,
             marks={50: '50%', 100: '100%', 200: '200%'},
             
         ),
-    ], style={'width': '50%', 'display': 'inline-block'}),
-    
-    html.Div([
+    ], ),
+    dbc.Row([
         html.Label("Horizontal Zoom"),
         dcc.Slider(
             id='horizontal-zoom-slider',
             min=50,
             max=200,
-            step=1,
+            step=10,
             value=100,
             marks={50: '50%', 100: '100%', 200: '200%'}
         ),
-    ], style={'width': '50%', 'display': 'inline-block'}),
+    ], ),
 
 ]  
 )
@@ -54,8 +53,8 @@ app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], server=server)
 # Build layout
 app.layout = dbc.Container([
     dbc.Row([
-        dbc.Col([tree, zoombox], width=3),
-        dbc.Col([graph], width=9),
+        dbc.Col([tree, zoombox], lg=3),
+        dbc.Col([graph], lg=9),
     ]),
 
 ],fluid=True)
