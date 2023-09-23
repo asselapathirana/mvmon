@@ -164,7 +164,7 @@ def get_graph(selectedkeys):
     ytitles={f'yaxis{i+1}_title':'<br>'.join(textwrap.wrap(GRAPHGROUPS[key], width=12)) for i,key in enumerate(gt)}
     fig.update_layout(**rangeslidersetter, **ytitles,
                     xaxis_type="date")
-    fig.update_xaxes(rangeslider_thickness = 0.05)
+    fig.update_xaxes(rangeslider_thickness = 0.025)
     fig.update_yaxes(automargin=True)
     fig.update_layout(
         margin=dict(l=20, r=20, t=20, b=20),
