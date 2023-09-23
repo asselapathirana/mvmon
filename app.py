@@ -17,7 +17,8 @@ server = flask.Flask(__name__)
 
 tree=fac.AntdTree(id="tree", treeData=sp.treeData, checkable=True, defaultExpandAll=True,
                   persistence_type='local', persistence=True)
-graph=html.Div(id="graphwindow", children=dcc.Graph(id="graph", style={'height': '150vh', 'width': '73vw'}))
+#gr=dcc.Graph( style={'height': '150vh', 'width': '73vw'}, config={"displaylogo": False,})
+graph=html.Div(id="graphwindow", children=[])
 
 
 zoombox=dbc.Container([
@@ -77,7 +78,8 @@ def update_output_div(input_value):
 def update_graph(vertical_zoom, horizontal_zoom,  input_value):
     horizontal_zoom=HFACT*int(horizontal_zoom)
     vertical_zoom=VFACT*int(vertical_zoom)
-    return dcc.Graph(figure=sp.get_graph(input_value), style={'height': f'{vertical_zoom}vh', 'width': f'{horizontal_zoom}vw'})
+    return dcc.Graph(figure=sp.get_graph(input_value), style={'height': f'{vertical_zoom}vh', 'width': f'{horizontal_zoom}vw'},
+                                                                         config={"displaylogo": False,})
 
 if __name__ == '__main__':
     app.run_server(debug=True, use_reloader=True)  # Turn off reloader if inside Jupyter
