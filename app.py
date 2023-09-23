@@ -48,7 +48,7 @@ zoombox=dbc.Container([
 ]  
 )
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], server=server)
+app = Dash(__name__, title = "3SWater Monitoring Stations", external_stylesheets=[dbc.themes.BOOTSTRAP], server=server)
 
 # Build layout
 app.layout = dbc.Container([
