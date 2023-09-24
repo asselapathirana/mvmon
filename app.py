@@ -10,7 +10,7 @@ from dash.exceptions import PreventUpdate
 import support as sp    
 import dash_bootstrap_components as dbc
 
-HFACT=0.72
+HFACT=0.99
 VFACT=0.99
 
 server = flask.Flask(__name__)
@@ -78,8 +78,10 @@ def update_output_div(input_value):
 def update_graph(vertical_zoom, horizontal_zoom,  input_value):
     horizontal_zoom=HFACT*int(horizontal_zoom)
     vertical_zoom=VFACT*int(vertical_zoom)
-    return dcc.Graph(figure=sp.get_graph(input_value), style={'height': f'{vertical_zoom}vh', 'width': f'{horizontal_zoom}vw'},
-                                                                         config={"displaylogo": False,})
+    print(f"horizontal_zoom={horizontal_zoom}, vertical_zoom={vertical_zoom}")
+    return dcc.Graph(figure=sp.get_graph(input_value), 
+                        style={'height': f'{vertical_zoom}vh', 'width': f'{horizontal_zoom}%'},
+                        config={"displaylogo": False,})
 
 if __name__ == '__main__':
     app.run_server(debug=True, use_reloader=True)  # Turn off reloader if inside Jupyter
