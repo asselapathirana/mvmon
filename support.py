@@ -10,11 +10,11 @@ import textwrap
 COUNTRY="The Maldives"
 PROVINCE="Meemu Atoll"
 ISLANDS=["Mulah", "Muli", "Kolhufushi"]
-STATIONTYPE=["Rain Gauge", "Groundwater", "Groundwater+"]
+STATIONTYPE=["Rain Gauge", "Groundwater", "Groundwater+", "Tide"]
 DEFAULTGRAPHS=['A07Rr']
 
 GRAPHGROUPS={'P': "Atmospheric pressure (mH20)", 'H': "Water level (m)", 'T': "Temperature (C°)", 'C':'Hydraulic Conductivity (mS/cm)',
-             'R':"Rainfall (mm)"}
+             'R':"Rainfall (mm)", "L": "Tide Level (m)"}
 COL2PARAM={
     'H1': "Groundwater Level (m)",	
     'P0': "Atmospheric Pressure (mH2O)"	,
@@ -25,6 +25,8 @@ COL2PARAM={
     'T2': "Infiltration pit water temperature (C°)",
     'R'	: "Accumulated rainfall (mm)",
     'Rr': "Rainfall (mm)",
+    'L0': "Tide Level-float (m)",
+    'L1': "Tide Level-radar (m)",
 }	
 STATIONTYPES={
     'A01': STATIONTYPE[2],
@@ -35,8 +37,15 @@ STATIONTYPES={
     'A06': STATIONTYPE[1],
     'A07': STATIONTYPE[0],
     'A08': STATIONTYPE[0],
+    'L20': STATIONTYPE[3],
+    'L21': STATIONTYPE[3],
 }
-COLORS=['blue', 'black', 'brown', 'purple', 'red', 'orange', 'green',  'grey', 'cyan', 'yellow', 'pink', 'magenta', 'lime', 'maroon', 'navy', 'olive', 'silver', 'teal']
+COLORS=['blue', 'black', 'brown', 'purple', 'red', 
+        'orange', 'green',  'grey', 'cyan', 'yellow', 
+        'pink', 'magenta', 'lime', 'maroon', 'navy', 
+        'olive', 'silver', 'teal',
+        'pink', 'magenta', 'lime', 'maroon', 'navy', 
+        'olive', 'silver', 'teal']
 DASHES=['solid',  'dash', 'dot', 'longdash', 'dashdot', 'longdashdot']
 stationarray=[]
 for station in STATIONTYPES.items():
@@ -46,8 +55,10 @@ for station in STATIONTYPES.items():
         subst=['R', 'Rr']
     elif (station[1] == STATIONTYPE[1]): # groundwater
         subst=['H1', 'P0', 'T0', 'T1', 'C1']
-    else:
+    elif (station[1] == STATIONTYPE[2]): # groundwater+
         subst=['H1', 'P0', 'T0', 'T1', 'C1', 'H2', 'T2']
+    elif (station[1] == STATIONTYPE[3]): # tide
+        subst=['L0', 'L1']
     
     tc2p={key: COL2PARAM[key] for key in subst}
     for col in tc2p.items():
@@ -63,7 +74,8 @@ for station in STATIONTYPES.items():
         'children': var,
     }
     stationarray.append(tmp)
-    
+
+  
 
 treeData =[
     {
@@ -74,11 +86,12 @@ treeData =[
             'title': PROVINCE,
             'key': PROVINCE,
             'children': stationarray
-        }
+        },
     ]
 }]
 
 def get_graph_types(selectedkeys):
+    print(f"got selecte keys {selectedkeys}")
     graph_types={x:[] for x in GRAPHGROUPS.keys()}
     for key in selectedkeys:
         graph_types[key[-2]].append(key)
@@ -88,14 +101,16 @@ def get_graph_types(selectedkeys):
 def get_graph(selectedkeys):
     if not (selectedkeys and len(selectedkeys)):
         selectedkeys=DEFAULTGRAPHS
-    # drop all selectedkeys that are not exactly 5 chars long and not starting with A
-    selectedkeys=[x for x in selectedkeys if len(x)==5 and x[0]=='A']
+    print(f"selectedkeys={selectedkeys}")
+    # drop all selectedkeys that are not exactly 5 chars long 
+    selectedkeys=[x for x in selectedkeys if len(x)==5 ]
     
     df=pd.read_pickle('./data/all_stations_data.pkl').reset_index()
+    print(df.columns)
     #Now rename column H0 to P0
     df.rename(columns={'H0': 'P0'}, inplace=True)
     gt=get_graph_types(selectedkeys)
-    print(gt)
+    print("types: ", gt)
     n=len(gt)
     # Create figure
     fig = go.Figure()
@@ -103,17 +118,17 @@ def get_graph(selectedkeys):
     fig = make_subplots(rows=n, cols=1, vertical_spacing=0.01, shared_xaxes=True)
     for i,key in enumerate(gt):
             for item in gt[key]:
-                print (f" Adding {item} to subplot {i+1} with item[:-2]]/item[-2:]]")
+                #print (f" Adding {item} to subplot {i+1} with item[:-2]]/item[-2:]]")
                 df_=df[df['UNIT_ID']==item[:-2]]
                 color=COLORS[int(item[1:-2])]
                 
-                print(item,item[:-2], color )
+                #print(item,item[:-2], color )
                 name=f"{item[:-2]}-{COL2PARAM[item[-2:]]}"
                 name='<br>'.join(textwrap.wrap(name, width=20))
                 if item[-2:]=='Rr' or item[-1]=='R':
                     dash=DASHES[0]
                 else:
-                    t=int(item[-1])
+                    t=int(item[-1:])
                     t=0 if t==1 else t
                     dash=DASHES[t]
                 if item[-2:]=='Rr':
@@ -175,5 +190,5 @@ def get_graph(selectedkeys):
 
 
 if __name__ == '__main__':
-    print(treeData)
+    get_graph(['A01C1', "Rr"])
     

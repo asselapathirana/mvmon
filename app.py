@@ -78,7 +78,7 @@ def update_output_div(input_value):
 def update_graph(vertical_zoom, horizontal_zoom,  input_value):
     horizontal_zoom=HFACT*int(horizontal_zoom)
     vertical_zoom=VFACT*int(vertical_zoom)
-    print(f"horizontal_zoom={horizontal_zoom}, vertical_zoom={vertical_zoom}")
+    print(f"horizontal_zoom={horizontal_zoom}, vertical_zoom={vertical_zoom}, checkedKeys={input_value}")
     return dcc.Graph(figure=sp.get_graph(input_value), 
                         style={'height': f'{vertical_zoom}vh', 'width': f'{horizontal_zoom}%'},
                         config={"displaylogo": False,})
