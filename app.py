@@ -6,7 +6,7 @@ import support as sp
 # import html components from dash
 from dash import Dash, Input, Output, State, callback, dcc, html
 from dash.exceptions import PreventUpdate
-from dash_bootstrap_components import Alert, Button, dbc
+import dash_bootstrap_components as dbc
 
 HFACT=0.99
 VFACT=0.99
@@ -46,11 +46,17 @@ zoombox=dbc.Container([
 
 ]  
 )
-
-app = Dash(__name__, title = "3SWater Monitoring Stations", external_stylesheets=[dbc.themes.BOOTSTRAP], server=server)
+title = "3SWater Monitoring Stations"
+app = Dash(__name__, title=title, external_stylesheets=[dbc.themes.BOOTSTRAP], server=server)
 
 # Build layout
 app.layout = dbc.Container([
+    dbc.Row([
+        dbc.Alert(id='banner-title', children=[
+            html.H1(title),
+            dbc.Button(id='close-button', children='X', className='close-button')
+        ], color='primary', className='banner-title'),
+    ]),
     dbc.Row([
         dbc.Col([dbc.Card(tree), dbc.Card(zoombox)], lg=3),
         dbc.Col([dbc.Card(graph)], lg=9),
@@ -68,12 +74,6 @@ def update_output_div(input_value):
 """
 
 @app.callback(
-    dbc.Row([
-        Alert(id='banner-title', children=[
-            "3SWater monitoring data",
-            Button(id='close-button', children='X', className='close-button')
-        ], color='primary', className='banner-title'),
-    ]),
     Output('graphwindow', 'children'),
     [Input('vertical-zoom-slider', 'value'),
     Input('horizontal-zoom-slider', 'value'),
@@ -87,13 +87,16 @@ def update_graph(vertical_zoom, horizontal_zoom,  input_value):
                         style={'height': f'{vertical_zoom}vh', 'width': f'{horizontal_zoom}%'},
                         config={"displaylogo": False,})
 
-if __name__ == '__main__':
-    app.run_server(debug=True, use_reloader=True)  # Turn off reloader if inside Jupyter
+
 @app.callback(
     Output('banner-title', 'is_open'),
     Input('close-button', 'n_clicks')
 )
 def toggle_banner(n):
+    print("toggle_banner", n)
     if n:
         return False
     return True
+
+if __name__ == '__main__':
+    app.run_server(debug=True, use_reloader=True)  # Turn off reloader if inside Jupyter
