@@ -1,14 +1,12 @@
-import pandas as pd
-import flask
-
-from dash import Dash, dcc, html, Input, Output, callback, State
 #import dash_ag_grid as dag
 import feffery_antd_components as fac
+import flask
+import pandas as pd
+import support as sp
 # import html components from dash
-from dash import html
+from dash import Dash, Input, Output, State, callback, dcc, html
 from dash.exceptions import PreventUpdate
-import support as sp    
-import dash_bootstrap_components as dbc
+from dash_bootstrap_components import Alert, Button, dbc
 
 HFACT=0.99
 VFACT=0.99
@@ -70,6 +68,12 @@ def update_output_div(input_value):
 """
 
 @app.callback(
+    dbc.Row([
+        Alert(id='banner-title', children=[
+            "3SWater monitoring data",
+            Button(id='close-button', children='X', className='close-button')
+        ], color='primary', className='banner-title'),
+    ]),
     Output('graphwindow', 'children'),
     [Input('vertical-zoom-slider', 'value'),
     Input('horizontal-zoom-slider', 'value'),
@@ -85,3 +89,11 @@ def update_graph(vertical_zoom, horizontal_zoom,  input_value):
 
 if __name__ == '__main__':
     app.run_server(debug=True, use_reloader=True)  # Turn off reloader if inside Jupyter
+@app.callback(
+    Output('banner-title', 'is_open'),
+    Input('close-button', 'n_clicks')
+)
+def toggle_banner(n):
+    if n:
+        return False
+    return True
