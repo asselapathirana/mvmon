@@ -13,20 +13,20 @@ ISLANDS=["Mulah", "Muli", "Kolhufushi"]
 STATIONTYPE=["Rain Gauge", "Groundwater", "Groundwater+", "Tide"]
 DEFAULTGRAPHS=['A07Rr']
 
-GRAPHGROUPS={'P': "Atmospheric pressure (mH20)", 'H': "Water level (m)", 'T': "Temperature (C°)", 'C':'Hydraulic Conductivity (mS/cm)',
+GRAPHGROUPS={'P': "Atmospheric pressure (mH20)", 'H': "Water level (m)", 'T': "Temperature (C°)", 'C':'Conductivity (mS/cm)',
              'R':"Rainfall (mm)", "L": "Tide Level (m)"}
 COL2PARAM={
     'H1': "Groundwater Level (m)",	
     'P0': "Atmospheric Pressure (mH2O)"	,
     'T0': "Atmospheric Temperature (C°)",	
     'T1': "Temperature in ground (C°)",	
-    'C1': "Hydraulic Conductivity (mS/cm)",
+    'C1': "Electrical Conductivity (mS/cm)",
     'H2': "Infiltration pit water level (m)",
     'T2': "Infiltration pit water temperature (C°)",
     'R'	: "Accumulated rainfall (mm)",
     'Rr': "Rainfall (mm)",
-    'L0': "Tide Level-float (m)",
-    'L1': "Tide Level-radar (m)",
+    'L0': "Tide Level-s-1 (m)",
+    'L1': "Tide Level-s-2 (m)",
 }	
 STATIONTYPES={
     'A01': STATIONTYPE[2],
@@ -118,8 +118,9 @@ def get_graph(selectedkeys):
     fig = make_subplots(rows=n, cols=1, vertical_spacing=0.01, shared_xaxes=True)
     for i,key in enumerate(gt):
             for item in gt[key]:
-                #print (f" Adding {item} to subplot {i+1} with item[:-2]]/item[-2:]]")
+                print (f" Adding {item} to subplot {i+1} with {item[:-2]}")
                 df_=df[df['UNIT_ID']==item[:-2]]
+                #print(df_.tail())
                 color=COLORS[int(item[1:-2])]
                 
                 #print(item,item[:-2], color )
@@ -190,5 +191,5 @@ def get_graph(selectedkeys):
 
 
 if __name__ == '__main__':
-    get_graph(['A01C1', "Rr"])
+    get_graph(['L20L0', "Rr"])
     
