@@ -15,6 +15,8 @@ git commit -m "message"
 git push pubsrv publicmain:main
 git push secsrv privatmain:main
 
+# use deploy.bash to automatically update both the branches on the upstreams
+
 # developing 
 
 Do all the development in main branch 
