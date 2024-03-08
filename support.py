@@ -98,7 +98,7 @@ def get_graph_types(selectedkeys):
     graph_types={key: value for key, value in graph_types.items() if len(value)}
     return graph_types
 
-def get_graph(selectedkeys):
+def get_graph(selectedkeys, auth=None):
     if not (selectedkeys and len(selectedkeys)):
         selectedkeys=DEFAULTGRAPHS
     print(f"selectedkeys={selectedkeys}")
@@ -120,6 +120,10 @@ def get_graph(selectedkeys):
             for item in gt[key]:
                 print (f" Adding {item} to subplot {i+1} with {item[:-2]}")
                 df_=df[df['UNIT_ID']==item[:-2]]
+                # if auth is None, select only the last 100 records
+                if auth is None:
+                    df_=df_.tail(100)
+                
                 #print(df_.tail())
                 color=COLORS[int(item[1:-2])]
                 
