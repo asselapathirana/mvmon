@@ -52,7 +52,7 @@ zoombox=dbc.Container([
 
 ]  
 )
-title = f"3SWater Monitoring Stations (${version})"
+title = f"3SWater Monitoring Stations ({version})"
 app = Dash(__name__, title=title, external_stylesheets=[dbc.themes.BOOTSTRAP], server=server)
 
 auth=loginornot.get_auth(app)
@@ -90,7 +90,7 @@ def update_graph(vertical_zoom, horizontal_zoom,  input_value):
     horizontal_zoom=HFACT*int(horizontal_zoom)
     vertical_zoom=VFACT*int(vertical_zoom)
     print(f"horizontal_zoom={horizontal_zoom}, vertical_zoom={vertical_zoom}, checkedKeys={input_value}")
-    return dcc.Graph(figure=sp.get_graph(input_value), 
+    return dcc.Graph(figure=sp.get_graph(input_value, auth=auth), 
                         style={'height': f'{vertical_zoom}vh', 'width': f'{horizontal_zoom}%'},
                         config={"displaylogo": False,})
 
