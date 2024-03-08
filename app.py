@@ -52,7 +52,7 @@ zoombox=dbc.Container([
 
 ]  
 )
-title = f"3SWater Monitoring Stations (${version})"
+title = f"3SWater Monitoring Stations ({version})"
 app = Dash(__name__, title=title, external_stylesheets=[dbc.themes.BOOTSTRAP], server=server)
 
 auth=loginornot.get_auth(app)
