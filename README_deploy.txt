@@ -12,7 +12,7 @@ git commit -m "message"
 # Note no -am , but -m 
 
 # there are two branches. 
-git push srv public:main 
+git push pubsrv publicmain:main
 git push secsrv secure:main
 
 # developing 
