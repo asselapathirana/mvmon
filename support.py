@@ -12,6 +12,7 @@ PROVINCE="Meemu Atoll"
 ISLANDS=["Mulah", "Muli", "Kolhufushi"]
 STATIONTYPE=["Rain Gauge", "Groundwater", "Groundwater+", "Tide"]
 DEFAULTGRAPHS=['A07Rr']
+PUBLICWINDOW={'from': -8, 'to': -1	}
 
 GRAPHGROUPS={'P': "Atmospheric pressure (mH20)", 'H': "Water level (m)", 'T': "Temperature (C°)", 'C':'Conductivity (mS/cm)',
              'R':"Rainfall (mm)", "L": "Tide Level (m)"}
@@ -90,6 +91,18 @@ treeData =[
     ]
 }]
 
+def subsample(df, auth=None):
+    # if auth is not None return the whole dataframe
+    if auth is not None:
+        return df
+    else:
+        # get the last time in data based on REC_TINM
+        lasttime=df['REC_TIME'].max()
+        # use time delta to get the window
+        frm_=lasttime+pd.Timedelta(days=PUBLICWINDOW['from'])
+        to__=lasttime+pd.Timedelta(days=PUBLICWINDOW['to'])
+        return df[(df['REC_TIME']>=frm_) & (df['REC_TIME']<=to__)]
+
 def get_graph_types(selectedkeys):
     print(f"got selecte keys {selectedkeys}")
     graph_types={x:[] for x in GRAPHGROUPS.keys()}
@@ -120,9 +133,7 @@ def get_graph(selectedkeys, auth=None):
             for item in gt[key]:
                 print (f" Adding {item} to subplot {i+1} with {item[:-2]}")
                 df_=df[df['UNIT_ID']==item[:-2]]
-                # if auth is None, select only the last 100 records
-                if auth is None:
-                    df_=df_.tail(100)
+                df_=subsample(df_, auth=auth)
                 
                 #print(df_.tail())
                 color=COLORS[int(item[1:-2])]
