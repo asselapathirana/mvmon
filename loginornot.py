@@ -5,13 +5,13 @@ VALID_USERNAME_PASSWORD_PAIRS = {
     'hello': 'world'
 }
 
-""" def get_auth(app):  
+def get_auth(app):  
     auth = dash_auth.BasicAuth(
         app,
         VALID_USERNAME_PASSWORD_PAIRS
     )
     return auth
-    """
     
-def get_auth(app):
-        return None
+    
+"""def get_auth(app):
+        return None"""
