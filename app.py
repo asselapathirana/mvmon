@@ -7,6 +7,7 @@ import support as sp
 from dash import Dash, Input, Output, State, callback, dcc, html
 from dash.exceptions import PreventUpdate
 import dash_bootstrap_components as dbc
+import loginornot
 
 
 HFACT=0.99
@@ -15,7 +16,7 @@ version="public version"
 
 server = flask.Flask(__name__)
 
-import loginornot
+
 
 
 tree=fac.AntdTree(id="tree", treeData=sp.treeData, checkable=True, defaultExpandAll=True,
@@ -54,6 +55,7 @@ zoombox=dbc.Container([
 title = f"3SWater Monitoring Stations (${version})"
 app = Dash(__name__, title=title, external_stylesheets=[dbc.themes.BOOTSTRAP], server=server)
 
+auth=loginornot.get_auth(app)
 # Build layout
 app.layout = dbc.Container([
     dbc.Row([
