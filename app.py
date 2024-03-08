@@ -7,7 +7,7 @@ import support as sp
 from dash import Dash, Input, Output, State, callback, dcc, html
 from dash.exceptions import PreventUpdate
 import dash_bootstrap_components as dbc
-import dash_au
+
 
 HFACT=0.99
 VFACT=0.99
