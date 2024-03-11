@@ -15,7 +15,7 @@ git commit -m "message"
 git push pubsrv publicmain:main
 git push secsrv privatmain:main
 
-# use deploy.bash to automatically update both the branches on the upstreams
+# use deploy.bash to automatically update both the branches and deploy to the servers
 
 # developing 
 
@@ -24,7 +24,7 @@ git checkout main
 <develop>
 commit
 
-But when running or editing loginornot.py go to either 
+But when editing loginornot.py go to either 
 
 privatmain or publicmain 
 
