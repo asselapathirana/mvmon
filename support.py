@@ -140,6 +140,16 @@ def get_graph(selectedkeys, auth=None):
                     # add bar chart                
                     fig.add_trace(
                         go.Scatter(name=name, x=list(df_['REC_TIME']), y=list(df_[item[-2:]]), line={'color':color, 'dash':dash}), i+1, 1)
+                elif item[-2:]=='L0' or item[-2:]=='L1':
+                    # tide. Need some hacking to 
+
+                    dftmp=df[df['UNIT_ID']==item[:-2]][['REC_TIME',item[-2:]]]
+                    # sort by REC_TIME
+                    # select rows with LO is not null
+                    dftmp=dftmp[dftmp[item[-2:]].notnull()]
+                    dftmp=dftmp.sort_values(by='REC_TIME')
+                    fig.add_trace(
+                        go.Scatter(name=name, x=list(dftmp['REC_TIME']), y=list(dftmp[item[-2:]]), line={'color':color, 'dash':dash}), i+1, 1)
                 else:
                     
                     fig.add_trace(
