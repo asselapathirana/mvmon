@@ -156,7 +156,7 @@ def get_graph(selectedkeys, auth=None):
 
                     dftmp=df[df['UNIT_ID']==item[:-2]][['REC_TIME',item[-2:]]]
                     
-                     dftmp=subsample(dftmp, auth=auth)
+                    dftmp=subsample(dftmp, auth=auth)
                     # sort by REC_TIME
                     # select rows with LO is not null
                     dftmp=dftmp[dftmp[item[-2:]].notnull()]
