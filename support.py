@@ -10,12 +10,14 @@ import textwrap
 COUNTRY="The Maldives"
 PROVINCE="Meemu Atoll"
 ISLANDS=["Mulah", "Muli", "Kolhufushi"]
-STATIONTYPE=["Rain Gauge", "Groundwater", "Groundwater+", "Tide"]
+STATIONTYPE=["Rain Gauge", "Groundwater", "Groundwater+", "Tide", "GroundwaterWeather"]
 DEFAULTGRAPHS=['A07Rr']
 PUBLICWINDOW={'from': -8, 'to': -1	}
 
+#Solar Intensity (W/m²)	Wind Speed (km/h)	Wind Direction (°)	Conductivity (mS/cm)	Temperature (°C)	Water Depth (m)	
+
 GRAPHGROUPS={'P': "Atmospheric pressure (mH20)", 'H': "Water level (m)", 'T': "Temperature (C°)", 'C':'Conductivity (mS/cm)',
-             'R':"Rainfall (mm)", "L": "Tide Level (m)"}
+             'R':"Rainfall (mm)", "L": "Tide Level (m)", 'S': "Solar Intensity (W/m²)", 'W': "Wind Speed (m/s)", 'D': "Wind Direction (°)"}
 COL2PARAM={
     'H1': "Groundwater Level (m)",	
     'P0': "Atmospheric Pressure (mH2O)"	,
@@ -28,6 +30,9 @@ COL2PARAM={
     'Rr': "Rainfall (mm)",
     'L0': "Tide Level-s-1 (m)",
     'L1': "Tide Level-s-2 (m)",
+    'W0': "Wind Speed (m/s)",
+    'W1': "Wind Direction (°)",
+    
 }	
 STATIONTYPES={
     'A01': STATIONTYPE[2],
@@ -39,8 +44,12 @@ STATIONTYPES={
     'A07': STATIONTYPE[0],
     'A08': STATIONTYPE[0],
     'L20': STATIONTYPE[3],
-    'L21': STATIONTYPE[3],
+    'L21': STATIONTYPE[3], 
+    'A09': STATIONTYPE[4],
+    
 }
+
+
 COLORS=['blue', 'black', 'brown', 'purple', 'red', 
         'orange', 'green',  'grey', 'cyan', 'yellow', 
         'pink', 'magenta', 'lime', 'maroon', 'navy', 
@@ -60,6 +69,8 @@ for station in STATIONTYPES.items():
         subst=['H1', 'P0', 'T0', 'T1', 'C1', 'H2', 'T2']
     elif (station[1] == STATIONTYPE[3]): # tide
         subst=['L0', 'L1']
+    elif (station[1] == STATIONTYPE[4]): # weather
+        subst=['R', 'Rr', 'H1', 'P0', 'T0', 'T1', 'C1', 'W0', 'W1']
     
     tc2p={key: COL2PARAM[key] for key in subst}
     for col in tc2p.items():
