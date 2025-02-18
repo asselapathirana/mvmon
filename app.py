@@ -89,8 +89,12 @@ def update_output_div(input_value):
 def update_graph(vertical_zoom, horizontal_zoom,  input_value):
     horizontal_zoom=HFACT*int(horizontal_zoom)
     vertical_zoom=VFACT*int(vertical_zoom)
-    print(f"horizontal_zoom={horizontal_zoom}, vertical_zoom={vertical_zoom}, checkedKeys={input_value}")
-    return dcc.Graph(figure=sp.get_graph(input_value, auth=auth), 
+    #print(f"horizontal_zoom={horizontal_zoom}, vertical_zoom={vertical_zoom}, checkedKeys={input_value}")
+    print(f"input_value={input_value}")
+    # Drop values starting with "_"
+    input_value = [x for x in input_value if not x.startswith("_")]
+    print(f"input_value={input_value}")	
+    return dcc.Graph(figure=sp.get_graph(input_value, auth=auth, clean=True), 
                         style={'height': f'{vertical_zoom}vh', 'width': f'{horizontal_zoom}%'},
                         config={"displaylogo": False,})
 
@@ -100,7 +104,7 @@ def update_graph(vertical_zoom, horizontal_zoom,  input_value):
     Input('close-button', 'n_clicks')
 )
 def toggle_banner(n):
-    print("toggle_banner", n)
+    #print("toggle_banner", n)
     if n:
         return False
     return True
