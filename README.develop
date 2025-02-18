@@ -1,0 +1,24 @@
+IMPORTANT 
+
+(# use deploy.bash to automatically update both the branches and deploy to the servers)
+
+# developing 
+
+Do all the development commits should be in the main branch
+git checkout main [x]
+git add ... 
+commit
+git checkout privatmain
+<develop> but don't commit. 
+To add and commit go to [x]
+
+
+But when editing loginornot.py go to either 
+
+privatmain or publicmain 
+
+git checkout publicmain
+git merge main
+
+# Do not run in main
+# Do NOT add loginornot.py to main branch!!!
