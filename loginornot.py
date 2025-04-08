@@ -1,6 +1,6 @@
 #dash-auth==2.2.1
 import dash_auth
-
+   
 version = "secure version"
 
 # read ./data/.password file as json
